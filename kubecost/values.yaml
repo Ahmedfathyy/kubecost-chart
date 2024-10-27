@@ -1,0 +1,94 @@
+## General settings
+replicaCount: 2
+
+# Image settings
+image:
+  repository: kubecost/cost-model
+  tag: "v1.100.0"
+  pullPolicy: IfNotPresent
+
+# Service settings
+service:
+  type: ClusterIP
+  port: 80
+
+# Ingress settings
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - kubecost.dev.tactful.ai
+  tls:
+    - secretName: kubecost-tls
+      hosts:
+        - kubecost.dev.tactful.ai
+
+# Resources for CPU and memory
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"
+
+# Autoscaling settings
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+# Service Account settings
+serviceAccount:
+  create: true
+  name: "kubecost-sa"
+
+# Security context
+securityContext:
+  enabled: true
+  runAsUser: 1000
+  fsGroup: 2000
+
+# NodeSelector, Tolerations, and Affinity for custom scheduling
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Configurations for kubecost settings
+kubecostConfig:
+  productKey: "your-product-key"
+  clusterName: "your-cluster-name"
+  prometheusAddress: "http://prometheus-server:9090"
+  slackWebhookUrl: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+
+# Persistent storage settings
+persistence:
+  enabled: true
+  storageClass: "gp2"
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+
+# Metrics exporter settings (optional)
+exporter:
+  enabled: true
+  image:
+    repository: kubecost/kubecost-exporter
+    tag: "v1.100.0"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+# Configure Prometheus integration (optional)
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    
