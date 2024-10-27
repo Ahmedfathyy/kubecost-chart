@@ -1,4 +1,4 @@
-## General settings
+# General settings
 replicaCount: 2
 
 # Image settings
@@ -19,11 +19,11 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
-    - kubecost.dev.tactful.ai
+    - kubecost.example.com
   tls:
     - secretName: kubecost-tls
       hosts:
-        - kubecost.dev.tactful.ai
+        - kubecost.example.com
 
 # Resources for CPU and memory
 resources:
@@ -91,4 +91,7 @@ prometheus:
   enabled: true
   serviceMonitor:
     enabled: true
-    
+    interval: 30s
+    scrapeTimeout: 10s
+    labels:
+      release: prometheus-operator
